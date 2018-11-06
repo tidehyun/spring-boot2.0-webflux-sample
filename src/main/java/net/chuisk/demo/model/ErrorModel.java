@@ -11,5 +11,5 @@ import lombok.ToString;
 @Builder
 public class ErrorModel {
     int code;
-    String name;
+    String description;
 }

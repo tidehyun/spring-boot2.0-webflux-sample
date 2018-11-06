@@ -18,6 +18,7 @@ public class HelloRoute implements WebFluxConfigurer {
     public RouterFunction<ServerResponse> restRoutes(RestHandler handler) {
         return RouterFunctions.route(RequestPredicates.GET("/functional/person/{id}"), handler::getPerson)
                 .andRoute(RequestPredicates.GET("/functional/person"), handler::getAllPerson)
+                .andRoute(RequestPredicates.GET("/functional/test"), handler::test)
                 .andRoute(RequestPredicates.POST("/functional/person"), handler::createPerson);
     }
 
@@ -33,7 +34,7 @@ public class HelloRoute implements WebFluxConfigurer {
     public RouterFunction<ServerResponse> errorRoutes(ErrorHandler handler) {
         return RouterFunctions.route(RequestPredicates.path("/error1/{stat}"), handler::error1)
                 .andRoute(RequestPredicates.path("/error2/{stat}"), handler::error2)
-                .andRoute(RequestPredicates.path("/error3/{stat}"),handler::error3);
+                .andRoute(RequestPredicates.path("/error3/{stat}"), handler::error3);
 
 
     }

@@ -1,11 +1,10 @@
 package net.chuisk.demo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 @Setter
 @Getter
@@ -14,6 +13,11 @@ import lombok.ToString;
 @ToString
 @Builder
 public class Person {
-	private String email;
-	private String name;
+    @Email(message = "Please check Email")
+    @NotEmpty(message = "Please check Email")
+    private String email;
+    @NotEmpty(message = "Please check Name")
+    private String name;
+    @Range(min = 0, max = 10, message = "Please check Age")
+    private int age;
 }

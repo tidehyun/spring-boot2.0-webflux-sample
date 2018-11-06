@@ -25,13 +25,10 @@ public class GlobalErrorConfig {
     }
 
     private Mono<Void> handle1(ServerWebExchange exchange, Throwable t) {
-        exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-
+//        exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
         DataBuffer dataBuffer = exchange.getResponse().bufferFactory().allocateBuffer();
-
         try {
-//            dataBuffer.write(mapper.writeValueAsString(ErrorModel.builder().code(500).name("global error").build()).getBytes());
-            dataBuffer.write("global error".getBytes());
+            dataBuffer.write(mapper.writeValueAsString(ErrorModel.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value()).description(t.getMessage()).build()).getBytes());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -12,14 +12,14 @@ import reactor.core.publisher.Mono;
 public class ErrorHandler {
     public <T extends ServerResponse> Mono<ServerResponse> error1(ServerRequest serverRequest) {
         return getData(serverRequest.pathVariable("stat"))
-                .onErrorReturn(ErrorModel.builder().code(500).name("unknown error").build())
+                .onErrorReturn(ErrorModel.builder().code(500).description("unknown error").build())
                 .flatMap(s -> ServerResponse.ok().syncBody(s));
     }
 
     public Mono<ServerResponse> error2(ServerRequest serverRequest) {
         return getData(serverRequest.pathVariable("stat"))
                 .flatMap(s -> ServerResponse.ok().syncBody("Error2 Success"))
-                .onErrorResume(throwable -> Mono.just(ErrorModel.builder().code(500).name("error2 Error!!").build())
+                .onErrorResume(throwable -> Mono.just(ErrorModel.builder().code(500).description("error2 Error!!").build())
                         .flatMap(s -> ServerResponse.ok().syncBody(s)));
     }
 
