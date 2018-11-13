@@ -32,7 +32,6 @@ public class GlobalErrorConfig {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return exchange.getResponse().writeWith(Mono.just(dataBuffer));
     }
 

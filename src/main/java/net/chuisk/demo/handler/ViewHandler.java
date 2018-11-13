@@ -22,4 +22,11 @@ public class ViewHandler {
         return ServerResponse.ok().render("functionalRegPerson");
     }
 
+    public Mono<ServerResponse> upload(ServerRequest request) {
+        return ServerResponse.ok().render("upload");
+    }
+
+    public Mono<ServerResponse> form(ServerRequest request) {
+        return ServerResponse.ok().render("form");
+    }
 }

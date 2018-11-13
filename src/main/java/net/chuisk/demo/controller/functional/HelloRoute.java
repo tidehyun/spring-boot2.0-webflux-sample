@@ -19,7 +19,8 @@ public class HelloRoute implements WebFluxConfigurer {
         return RouterFunctions.route(RequestPredicates.GET("/functional/person/{id}"), handler::getPerson)
                 .andRoute(RequestPredicates.GET("/functional/person"), handler::getAllPerson)
                 .andRoute(RequestPredicates.GET("/functional/test"), handler::test)
-                .andRoute(RequestPredicates.POST("/functional/person"), handler::createPerson);
+                .andRoute(RequestPredicates.POST("/functional/person"), handler::createPerson)
+                .andRoute(RequestPredicates.POST("/functional/upload"), handler::upload);
     }
 
     @Bean
@@ -27,7 +28,8 @@ public class HelloRoute implements WebFluxConfigurer {
         return RouterFunctions
                 .route(RequestPredicates.path("/functional").or(RequestPredicates.path("/functional/main")),
                         handler::main)
-                .andRoute(RequestPredicates.GET("/functional/register"), handler::regPerson);
+                .andRoute(RequestPredicates.GET("/functional/register"), handler::regPerson)
+                .andRoute(RequestPredicates.GET("/functional/upload"), handler::upload);
     }
 
     @Bean

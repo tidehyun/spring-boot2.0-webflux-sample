@@ -16,7 +16,7 @@ public class DummyPersonRepository implements PersonRepository {
     private final Map<Integer, Person> personMap = new HashMap<Integer, Person>();
 
     public Mono<Person> getPerson(int id) {
-        return Mono.justOrEmpty(this.personMap.get(id));
+        return Mono.justOrEmpty(this.personMap.get(id)).log();
     }
 
     public Flux<Person> allPerson() {
