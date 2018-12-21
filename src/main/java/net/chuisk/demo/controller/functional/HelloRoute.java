@@ -16,10 +16,10 @@ public class HelloRoute implements WebFluxConfigurer {
 
     @Bean
     public RouterFunction<ServerResponse> restRoutes(RestHandler handler) {
-        return RouterFunctions.route(RequestPredicates.GET("/functional/person/{id}"), handler::getPerson)
+        return RouterFunctions.route(RequestPredicates.GET("/functional/person/{id}"), handler::getPersonFromDB)
                 .andRoute(RequestPredicates.GET("/functional/person"), handler::getAllPerson)
                 .andRoute(RequestPredicates.GET("/functional/test"), handler::test)
-                .andRoute(RequestPredicates.POST("/functional/person"), handler::createPerson)
+                .andRoute(RequestPredicates.POST("/functional/person"), handler::createPersonToDB)
                 .andRoute(RequestPredicates.POST("/functional/upload"), handler::upload);
     }
 

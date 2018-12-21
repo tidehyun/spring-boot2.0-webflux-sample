@@ -2,6 +2,8 @@ package net.chuisk.demo.model;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -12,7 +14,10 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @ToString
 @Builder
+@Document(collection = "person")
 public class Person {
+    @Id
+    private String id;
     @Email(message = "Please check Email")
     @NotEmpty(message = "Please check Email")
     private String email;

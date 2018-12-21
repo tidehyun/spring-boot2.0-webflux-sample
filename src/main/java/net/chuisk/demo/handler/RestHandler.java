@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.chuisk.demo.model.ErrorModel;
 import net.chuisk.demo.model.Person;
+import net.chuisk.demo.model.ResultModel;
+import net.chuisk.demo.repository.MongoRepository;
 import net.chuisk.demo.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.codec.multipart.FilePart;
-import org.springframework.http.codec.multipart.Part;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -20,7 +21,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.io.File;
 import java.util.Iterator;
-import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -30,6 +30,9 @@ public class RestHandler {
 
     @Autowired
     private PersonRepository repository;
+
+    @Autowired
+    private MongoRepository mongoRepository;
 
     @Autowired
     private Validator validator;
@@ -42,6 +45,14 @@ public class RestHandler {
         return ServerResponse.ok().contentType(APPLICATION_JSON).body(personMono, Person.class).switchIfEmpty(notFound);
     }
 
+    public Mono<ServerResponse> getPersonFromDB(ServerRequest request) {
+        Mono<ResultModel> result = mongoRepository.findById(request.pathVariable("id"))
+                .flatMap(person -> Mono.just(ResultModel.builder().code(200).data(person).description("success").build()))
+                .switchIfEmpty(Mono.just(ResultModel.builder().code(500).data(null).description("no person!!").build()))
+                .onErrorResume(throwable -> Mono.just(ResultModel.builder().code(500).data(null).description(throwable.getMessage()).build()));
+        return ServerResponse.ok().body(result, ResultModel.class);
+    }
+
     public Mono<ServerResponse> createPerson(ServerRequest request) {
         return request.bodyToMono(Person.class).flatMap(person -> {
             String message = validation(person);
@@ -51,6 +62,18 @@ public class RestHandler {
                 return Mono.error(new RuntimeException(message));
             }
         });
+    }
+
+    public Mono<ServerResponse> createPersonToDB(ServerRequest request) {
+        Mono<ResultModel> result = request.bodyToMono(Person.class)
+                .flatMap(
+                        person -> mongoRepository.save(person)
+                                .thenReturn(ResultModel.builder().code(200).data(person).description("success").build())
+                                .onErrorResume(throwable ->
+                                        Mono.just(ResultModel.builder().code(500).data(null).description(throwable.getMessage()).build()))
+
+                );
+        return ServerResponse.ok().body(result, ResultModel.class);
     }
 
     public Mono<ServerResponse> getAllPerson(ServerRequest request) {
